@@ -1,32 +1,46 @@
-import { useReducer, useState } from "react";
+import { useReducer } from "react";
+
+const initialState = { step: 1, count: 0 };
 
 const reducer = (state, action) => {
-  if (action.type === "dec") return state - 1;
-  if (action.type === "inc") return state + 1;
-  if (action.type === "setCount") return action.payload;
-  if (action.type === "reset") return 0;
+  console.log("state", state);
+  console.log("action", action);
+
+  switch (action.type) {
+    case "dec":
+      return { ...state, count: state.count - 1 * state.step };
+
+    case "inc":
+      return { ...state, count: state.count + 1 * state.step };
+
+    case "setCount":
+      return { ...state, count: action.payload };
+
+    case "setStep":
+      return { ...state, step: action.payload };
+
+    case "reset":
+      return initialState;
+
+    default:
+      throw new Error("Unknown Action");
+  }
 };
 
 function DateCounter() {
-  // const [count, setCount] = useState(0);
-  const [step, setStep] = useState(1);
-
-  const [count, dispatch] = useReducer(reducer, 7);
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { step, count } = state;
 
   // This mutates the date object.
   const date = new Date("june 21 2027");
   date.setDate(date.getDate() + count);
 
   const dec = function () {
-    // setCount((count) => count - 1);
     dispatch({ type: "dec" });
-    // setCount((count) => count - step);
   };
 
   const inc = function () {
-    // setCount((count) => count + 1);
     dispatch({ type: "inc" });
-    // setCount((count) => count + step);
   };
 
   const defineCount = function (e) {
@@ -35,12 +49,10 @@ function DateCounter() {
   };
 
   const defineStep = function (e) {
-    setStep(Number(e.target.value));
+    dispatch({ type: "setStep", payload: Number(e.target.value) });
   };
 
   const reset = function () {
-    // setCount(0);
-    setStep(1);
     dispatch({ type: "reset" });
   };
 
