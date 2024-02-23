@@ -51,6 +51,9 @@ const reducer = (state, action) => {
           state.points > state.highScore ? state.points : state.highScore,
       };
 
+    case "restart":
+      return { ...initialState, questions: state.questions, status: "ready" };
+
     default:
       throw new Error("Action is Unknown");
   }
@@ -106,6 +109,7 @@ const App = () => {
             points={points}
             maxPoints={maxPoints}
             highScore={highScore}
+            dispatch={dispatch}
           />
         )}
       </Main>
